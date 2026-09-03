@@ -138,7 +138,7 @@ Derived from `config.json` (28 layers, 28 attention heads, **4 KV heads**, hidde
 
 **Capacity, from the measured pool of 470,400 slots:** ~115 sessions at 4,096-token context, but only **~14** at 32,768. Eight times the context, eight times fewer users, perfectly linear — predictable from a config file before it ever happens in production.
 
-**A full box on this rig is already past the crossover.** 470,400 slots ÷ 265,000 crossover = **1.77×**. At full pool the step reads 15.24 GB of weights *plus* 26.97 GB of KV cache = 42.2 GB, so the floor becomes 42.2/864 = **48.8 ms — 2.8× the 17.6 ms used for three lessons.** Nothing redeployed; the second term simply grew until it owned step time.
+**A full box on this rig is already past the crossover.** 470,400 slots ÷ 265,000 crossover = **1.77×**. At full pool the step reads 15.23 GB of weights *plus* 26.97 GB of KV cache = 42.2 GB, so the floor becomes 42.2/864 = **48.8 ms — 2.8× the 17.6 ms used for three lessons.** Nothing redeployed; the second term simply grew until it owned step time.
 
 **Throughput collapse is multiplicative:** 4k chats give ~115 tokens per step; 32k documents give ~14 — at the same ~49 ms step cost. Roughly 2,350 tok/s versus 290 tok/s. Same full pool, same busy GPU, 8× less output.
 
@@ -233,7 +233,7 @@ Sharing requires **exact token IDs** (not similar text), **starting at position 
 **The sizing drill — 300 req/s, 2k in / 300 out, p99 TTFT < 800 ms:**
 ```
 cache/request  2150 × 56 KiB                     = 123 MB
-knee B*        15.24 GB / 123 MB ≈ 124           → use B = 120
+knee B*        15.23 GB / 123 MB ≈ 124           → use B = 120
 fit check      120 × 2150 = 258,000 of 470,400   → fits, 1.8× headroom
 decode         (15.24 + 120×0.123)/864 = 34.7 ms → 300 × 34.7/120 = 87 ms/req
 prefill        2 × 7.62e9 × 2000 / 362e12        = 84 ms/req   (matches L3's 2048 row)
